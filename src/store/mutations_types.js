@@ -6,3 +6,5 @@ export const RECEIVE_GETOUT = 'receive_getout' // 用户登出
 export const RECEIVE_GETSHOPGOODS = 'receive_getshopgoods' // 获取商店商品
 export const RECEIVE_GETSHOPINFO = 'receive_getshopinfo' // 获取商店商品
 export const RECEIVE_GETSHOPRATING = 'receive_getshoprating' // 获取商店商品
+export const INCRESE_COUNT = 'increse_count'// 增加购物车商品
+export const DECRESE_COUNT = 'decrese_count'// 减少购物车商品

@@ -3,15 +3,15 @@
     <div class="shopfooter">
       <div class="shopfooter_count">
         <div class="leftCart">
-          <div class="iconfont icongouwuche"></div>
-          <div class="leftCart_Tag">0</div>
+          <div class="iconfont icongouwuche" :class="{heightLight:totalCount}"></div>
+          <div class="leftCart_Tag">{{totalCount}}</div>
         </div>
         <div class="count">
-          <div class="count_num">￥0</div>
-          <div class="count_text">另需配送费￥4元</div>
+          <div class="count_num">￥{{totalPrice}}</div>
+          <div class="count_text">另需配送费￥{{info.deliveryPrice}}元</div>
         </div>
-        <div class="rightPrice">
-          ￥20起送
+        <div class="rightPrice" :class="countType">
+          {{countText}}
         </div>
       </div>
       <div class="shopfooter_cart" v-show="showshadow">
@@ -25,54 +25,81 @@
               <div class="shopName">八宝酱菜</div>
               <div class="shopPrice">￥4</div>
               <div class="shopCount">
-                <shop-count></shop-count>
+                <count></count>
               </div>
             </li>
             <li class="shopList_item van-hairline--bottom">
               <div class="shopName">八宝酱菜</div>
               <div class="shopPrice">￥4</div>
               <div class="shopCount">
-                <shop-count></shop-count>
+                <count></count>
               </div>
             </li>
             <li class="shopList_item van-hairline--bottom">
               <div class="shopName">八宝酱菜</div>
               <div class="shopPrice">￥4</div>
               <div class="shopCount">
-                <shop-count></shop-count>
+                <count></count>
               </div>
             </li>
             <li class="shopList_item van-hairline--bottom">
               <div class="shopName">八宝酱菜</div>
               <div class="shopPrice">￥4</div>
               <div class="shopCount">
-                <shop-count></shop-count>
+                <count></count>
               </div>
             </li>
             <li class="shopList_item van-hairline--bottom">
               <div class="shopName">八宝酱菜</div>
               <div class="shopPrice">￥4</div>
               <div class="shopCount">
-                <shop-count></shop-count>
+                <count></count>
               </div>
             </li>
           </ul>
         </div>
       </div>
-      <div class="shadow" v-show="showshadow"></div>
+      <div class="shadow" v-if="showshadow"></div>
     </div>
   </div>
 
 </template>
 <script>
-import shopCount from '../../components/shopCount/shopCount'
+import Count from '../../components/shopCount/shopCount'
+import { mapState, mapGetters } from 'vuex'
 export default {
   components: {
-    shopCount
+    Count
   },
   data () {
     return {
       showshadow: false
+    }
+  },
+  computed: {
+    ...mapState(['info', 'cartGoods']),
+    ...mapGetters(['totalCount', 'totalPrice']),
+    // 样式
+    countType () {
+      const { totalPrice } = this
+      const { minPrice } = this.info
+      if (totalPrice < minPrice) {
+        return 'no_enough'
+      } else {
+        return 'enough'
+      }
+    },
+    // 文字
+    countText () {
+      const { totalPrice } = this
+      const { minPrice } = this.info
+      if (totalPrice === 0) {
+        return '￥20起送'
+      } else if (totalPrice < minPrice) {
+        return `还差${minPrice - totalPrice}起送`
+      } else {
+        return '去结算'
+      }
     }
   }
 }
@@ -108,6 +135,9 @@ export default {
         color #80858A
         line-height 48px
         font-size 25px
+        &.heightLight
+          background-color #02A774
+          color #fff
       .leftCart_Tag
         position absolute
         right 0
@@ -146,6 +176,11 @@ export default {
       top 0
       right 0
       background-color #2B333B
+      &.no_enough
+        background #2b333b
+      &.enough
+        background #00B43C
+        color #FFFFFF
   .shopfooter_cart
     z-index 100
     position absolute

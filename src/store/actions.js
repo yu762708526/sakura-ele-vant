@@ -1,4 +1,8 @@
-import { RECEIVE_ADDRESS, RECEIVE_FOODSTYPE, RECEIVE_SHOPLIST, RECEIVE_USERINFO, RECEIVE_GETOUT, RECEIVE_GETSHOPGOODS, RECEIVE_GETSHOPINFO, RECEIVE_GETSHOPRATING } from './mutations_types'
+import {
+  RECEIVE_ADDRESS, RECEIVE_FOODSTYPE, RECEIVE_SHOPLIST, RECEIVE_USERINFO, RECEIVE_GETOUT,
+  RECEIVE_GETSHOPGOODS, RECEIVE_GETSHOPINFO,
+  RECEIVE_GETSHOPRATING, INCRESE_COUNT, DECRESE_COUNT
+} from './mutations_types'
 import { reqAddress, reqFoodsType, reqShopsList, reqLogout, reqShopGoods, reqShopInfo, reqShopRating } from '../api/index'
 export default {
   async getAddress ({ commit, state }) { // 根据经纬度获取位置详情
@@ -40,7 +44,7 @@ export default {
       commit(RECEIVE_GETSHOPINFO, { info })
     }
   },
-  async getShopGoods ({ commit }, callback) { // 商家信息
+  async getShopGoods ({ commit }, callback) { // 商品信息
     const result = await reqShopGoods()
     if (result.code === 0) {
       const goods = result.data
@@ -53,6 +57,13 @@ export default {
     if (result.code === 0) {
       const rating = result.data
       commit(RECEIVE_GETSHOPRATING, { rating })
+    }
+  },
+  updataCartCount ({ commit }, { isAdd, food }) { // 更新商品的数量
+    if (isAdd) {
+      commit(INCRESE_COUNT, { food }) // 增加
+    } else {
+      commit(DECRESE_COUNT, { food }) // 减少
     }
   }
 }

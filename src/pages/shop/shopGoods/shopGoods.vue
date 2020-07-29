@@ -13,20 +13,29 @@
     <!-- 右侧内容列表 -->
     <div class="right">
       <ul>
-        <li class="parent_li" v-for="(items, index) in goods" :key="index" ref="parent_li">
-          <div class="title">{{items.name}}</div>
+        <li class="parent_li" v-for="(good, index) in goods" :key="index" ref="parent_li">
+          <div class="title">{{good.name}}</div>
           <ul>
-            <li class="child_li van-hairline--bottom" v-for="(item, index) in items.foods" :key="index">
+            <li class="child_li van-hairline--bottom" v-for="(food, index) in good.foods" :key="index">
               <div class="item_img">
-                <img class="img" :src="item.icon" alt="">
+                <img class="img" :src="food.icon" alt="">
               </div>
               <div class="item_content">
-                <div class="item_content_title">{{item.name}}</div>
-                <div class="item_content_name">{{item.description}}</div>
-                <div class="item_content_count">月售 {{item.sellCount}} 份 &nbsp;好评率 {{item.rating}}%</div>
-                <div class="item_content_price">￥{{item.price}}</div>
+                <div class="item_content_title">{{food.name}}</div>
+                <div class="item_content_name">{{food.description}}</div>
+                <div class="item_content_count">月售 {{food.sellCount}} 份 好评率 {{food.rating}}%</div>
+                <div class="item_content_price">
+                  <div class="item_content_price_new">
+                    ￥{{food.price}}
+                  </div>
+                  <div class="item_content_price_old" v-show="food.oldPrice">
+                    ￥{{food.oldPrice}}
+                  </div>
+                </div>
+                <div>
+                  <count :food="food"></count>
+                </div>
               </div>
-              <shop-count></shop-count>
             </li>
           </ul>
         </li>
@@ -36,14 +45,28 @@
   </div>
 </template>
 <script>
-import shopCount from '../../../components/shopCount/shopCount'
+import { mapState } from 'vuex'
+import Count from '../../../components/shopCount/shopCount'
 import shopFooter from '../../../components/shopFooter/shopfooter'
 import BScroll from 'better-scroll'
-import { mapState } from 'vuex'
 export default {
+
+  data () {
+    return {
+      // 默认index
+      // currentIndex: 0,
+      // 右边分类的top
+      tops: [],
+      // 某一个分类的高度
+      scrollY: 0,
+      // 侧边栏滑动默认值
+      touchstatus: false,
+      food: {} // 商品信息
+    }
+  },
   components: {
     shopFooter,
-    shopCount
+    Count
   },
   computed: {
     ...mapState(['goods']),
@@ -55,20 +78,37 @@ export default {
       return index
     }
   },
-  data () {
-    return {
-      // 默认index
-      // currentIndex: 0,
-      // 右边分类的top
-      tops: [],
-      // 某一个分类的高度
-      scrollY: 0,
-      // 侧边栏滑动默认值
-      touchstatus: false
-    }
+
+  mounted () {
+    // 数据更新之后再滑动
+    this.$store.dispatch('getShopGoods', () => {
+      this.$nextTick(() => {
+        // 右边每一个商品分类的高度
+        this._initScroll()
+        this._foodsTypeTop()
+      })
+    })
   },
   methods: {
-
+    _initScroll () {
+      this.scrollFoods = new BScroll('.right', { // 右边滑动
+        click: true,
+        probeType: 2
+      })
+      this.scrollMenu = new BScroll('.left', { // 左边滑动
+        click: true
+      })
+      this.scrollFoods.on('scroll', ({ x, y }) => {
+        const scrollY = Math.abs(y)
+        this.scrollY = scrollY
+        console.log(0, y)
+      })
+      this.scrollFoods.on('scrollEnd', ({ x, y }) => {
+        const scrollY = Math.abs(y)
+        this.scrollY = scrollY
+        console.log('scrollEnd', y)
+      })
+    },
     // handleTouchstart () {
     //   this.touchstatus = true
     // },
@@ -88,10 +128,10 @@ export default {
     toggleLeftItem (index) {
       const scrollY = this.tops[index]
       this.scrollY = scrollY
-      this.scroll.scrollTo(0, -scrollY, 300)
+      this.scrollFoods.scrollTo(0, -scrollY, 300)
     },
     // 右边每一个商品分类的高度
-    foodsTypeTop () {
+    _foodsTypeTop () {
       const tops = []
       let top = 0
       tops.push(top)
@@ -103,33 +143,8 @@ export default {
       this.tops = tops
     }
     // 初始化scroll
-  },
-  mounted () {
-    // 数据更新之后再滑动
-    this.$store.dispatch('getShopGoods', () => {
-      this.$nextTick(() => {
-        this.scroll = new BScroll('.right', { // 右边滑动
-          click: true,
-          probeType: 2
-        })
-        this.scrollMenu = new BScroll('.left', { // 左边滑动
-          click: true
-        })
-        this.scroll.on('scroll', ({ x, y }) => {
-          const scrollY = Math.abs(y)
-          this.scrollY = scrollY
-          console.log(0, y)
-        })
-        this.scroll.on('scrollEnd', ({ x, y }) => {
-          const scrollY = Math.abs(y)
-          this.scrollY = scrollY
-          console.log('scrollEnd', y)
-        })
-        // 右边每一个商品分类的高度
-        this.foodsTypeTop()
-      })
-    })
   }
+
 }
 </script>
 <style lang="stylus" scoped>
@@ -202,6 +217,15 @@ export default {
             margin-bottom 5px
             font-size 10px
           .item_content_price
-            color #F01414
-            font-size 14px
+            display flex
+            align-items center
+            .item_content_price_new
+              color #F01414
+              font-size 14px
+            .item_content_price_old
+              margin-left 5px
+              font-size 10px
+              color #93999F
+              margin-top 2px
+              text-decoration line-through
 </style>
