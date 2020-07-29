@@ -1,0 +1,22 @@
+import Vue from 'vue'
+import { NavBar, Button, Swipe, SwipeItem, Grid, GridItem, Card, Tag, Rate, Col, Row, Search, Tab, Tabs, Form, Field, Dialog, Icon, Toast } from 'vant'
+
+Vue.use(Toast)
+Vue.use(Icon)
+Vue.use(Dialog)
+Vue.use(Field)
+Vue.use(Form)
+Vue.use(Tab)
+Vue.use(Tabs)
+Vue.use(Search)
+Vue.use(Col)
+Vue.use(Row)
+Vue.use(Rate)
+Vue.use(Tag)
+Vue.use(Card)
+Vue.use(Grid)
+Vue.use(GridItem)
+Vue.use(Swipe)
+Vue.use(SwipeItem)
+Vue.use(Button)
+Vue.use(NavBar)
