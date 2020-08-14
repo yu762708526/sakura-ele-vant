@@ -22,7 +22,7 @@ const routes = [
     meta: {
       show: true
     },
-    component: Home = () => import('../pages/home/Home.vue')
+    component: () => import('../pages/home/Home.vue')
   },
   {
     path: '/search',
@@ -30,7 +30,7 @@ const routes = [
     meta: {
       show: true
     },
-    component: Search = () => import('../pages/search/Search.vue')
+    component: () => import('../pages/search/Search.vue')
 
   },
   {
@@ -39,7 +39,7 @@ const routes = [
     meta: {
       show: true
     },
-    component: Order = () => import('../pages/order/Order.vue')
+    component: () => import('../pages/order/Order.vue')
   },
   {
     path: '/personal',
@@ -47,7 +47,7 @@ const routes = [
     meta: {
       show: true
     },
-    component: Personal = () => import('../pages/personal/Personal.vue')
+    component: () => import('../pages/personal/Personal.vue')
   },
   {
     path: '/login',
