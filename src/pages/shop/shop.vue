@@ -9,7 +9,9 @@
       <router-link :to="{path:'/shop/rating',query:{id:this.$route.query.id}}" tag="div" replace class="tab_class">商家
       </router-link>
     </div>
-    <router-view></router-view>
+    <keep-alive>
+      <router-view></router-view>
+    </keep-alive>
   </div>
 </template>
 <script>

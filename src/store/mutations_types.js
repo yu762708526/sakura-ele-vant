@@ -8,3 +8,5 @@ export const RECEIVE_GETSHOPINFO = 'receive_getshopinfo' // 获取商店商品
 export const RECEIVE_GETSHOPRATING = 'receive_getshoprating' // 获取商店商品
 export const INCRESE_COUNT = 'increse_count'// 增加购物车商品
 export const DECRESE_COUNT = 'decrese_count'// 减少购物车商品
+export const CLEANCART = 'cleancart'// 清空购物车商品
+export const RECEIVE_SEARCHLIST = 'receive_searchlist' // 根据经纬度和关键字搜索商铺列表

@@ -1,9 +1,9 @@
 import {
   RECEIVE_ADDRESS, RECEIVE_FOODSTYPE, RECEIVE_SHOPLIST, RECEIVE_USERINFO, RECEIVE_GETOUT,
   RECEIVE_GETSHOPGOODS, RECEIVE_GETSHOPINFO,
-  RECEIVE_GETSHOPRATING, INCRESE_COUNT, DECRESE_COUNT
+  RECEIVE_GETSHOPRATING, INCRESE_COUNT, DECRESE_COUNT, CLEANCART, RECEIVE_SEARCHLIST
 } from './mutations_types'
-import { reqAddress, reqFoodsType, reqShopsList, reqLogout, reqShopGoods, reqShopInfo, reqShopRating } from '../api/index'
+import { reqAddress, reqFoodsType, reqShopsList, reqLogout, reqShopGoods, reqShopInfo, reqShopRating, reqSearch } from '../api/index'
 export default {
   async getAddress ({ commit, state }) { // 根据经纬度获取位置详情
     const geohash = state.latitude + ',' + state.longitude
@@ -64,6 +64,18 @@ export default {
       commit(INCRESE_COUNT, { food }) // 增加
     } else {
       commit(DECRESE_COUNT, { food }) // 减少
+    }
+  },
+  cleanCart ({ commit }) { // 清空购物车
+    commit(CLEANCART)
+  },
+  // 根据经纬度和关键字搜索商铺列表
+  async getSearch ({ commit, state }, keyword) {
+    const geohash = state.latitude + ',' + state.longitude
+    const result = await reqSearch(geohash, keyword)
+    if (result.code === 0) {
+      const searchList = result.data
+      commit(RECEIVE_SEARCHLIST, { searchList })
     }
   }
 }

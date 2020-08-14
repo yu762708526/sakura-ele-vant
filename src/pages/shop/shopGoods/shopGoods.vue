@@ -1,50 +1,56 @@
 <template>
-  <div class="shopGoods">
-    <!-- 左侧导航列表 -->
-    <div class="left" ref="left">
-      <ul class="left_ul">
-        <li class="content_li" v-for="(good, index) in goods" :key="index" :class="{on:currentIndex === index}"
-          @click="toggleLeftItem(index)" ref="content_li">
-          <img class="icon" :src="good.icon" alt="" v-if="good.icon">
-          {{good.name}}
-        </li>
-      </ul>
-    </div>
-    <!-- 右侧内容列表 -->
-    <div class="right">
-      <ul>
-        <li class="parent_li" v-for="(good, index) in goods" :key="index" ref="parent_li">
-          <div class="title">{{good.name}}</div>
-          <ul>
-            <li class="child_li van-hairline--bottom" v-for="(food, index) in good.foods" :key="index">
-              <div class="item_img">
-                <img class="img" :src="food.icon" alt="">
-              </div>
-              <div class="item_content">
-                <div class="item_content_title">{{food.name}}</div>
-                <div class="item_content_name">{{food.description}}</div>
-                <div class="item_content_count">月售 {{food.sellCount}} 份 好评率 {{food.rating}}%</div>
-                <div class="item_content_price">
-                  <div class="item_content_price_new">
-                    ￥{{food.price}}
+  <div>
+    <div class="shopGoods">
+      <!-- 左侧导航列表 -->
+      <div class="left" ref="left">
+        <ul class="left_ul">
+          <li class="content_li van-hairline--bottom" v-for="(good, index) in goods" :key="index"
+            :class="{on:currentIndex === index}" @click="toggleLeftItem(index)" ref="content_li">
+            <img class="icon" :src="good.icon" alt="" v-if="good.icon">
+            {{good.name}}
+          </li>
+        </ul>
+      </div>
+      <!-- 右侧内容列表 -->
+      <div class="right">
+        <ul>
+          <li class="parent_li" v-for="(good, index) in goods" :key="index" ref="parent_li">
+            <div class="title">{{good.name}}</div>
+            <ul>
+              <li class="child_li van-hairline--bottom" v-for="(food, index) in good.foods" :key="index"
+                @click="toggleGoodsDetail(food)">
+                <div class="item_img">
+                  <img class="img" v-lazy="food.icon" alt="">
+                </div>
+                <div class="item_content">
+                  <div class="item_content_title">{{food.name}}</div>
+                  <div class="item_content_name">{{food.description}}</div>
+                  <div class="item_content_count">月售 {{food.sellCount}} 份 好评率 {{food.rating}}%</div>
+                  <div class="item_content_price">
+                    <div class="item_content_price_new">
+                      ￥{{food.price}}
+                    </div>
+                    <div class="item_content_price_old" v-show="food.oldPrice">
+                      ￥{{food.oldPrice}}
+                    </div>
                   </div>
-                  <div class="item_content_price_old" v-show="food.oldPrice">
-                    ￥{{food.oldPrice}}
+                  <div>
+                    <count :food="food"></count>
                   </div>
                 </div>
-                <div>
-                  <count :food="food"></count>
-                </div>
-              </div>
-            </li>
-          </ul>
-        </li>
-      </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <shop-footer></shop-footer>
     </div>
-    <shop-footer></shop-footer>
+    <goods-detail v-if="showGoodsDetail" :food="food" @toggleDetail="closeDetail"></goods-detail>
   </div>
+
 </template>
 <script>
+import goodsDetail from '../../../components/shopGoodsDetail/goodsDetail'
 import { mapState } from 'vuex'
 import Count from '../../../components/shopCount/shopCount'
 import shopFooter from '../../../components/shopFooter/shopfooter'
@@ -61,12 +67,15 @@ export default {
       scrollY: 0,
       // 侧边栏滑动默认值
       touchstatus: false,
-      food: {} // 商品信息
+      // 商品详情默认值
+      showGoodsDetail: false,
+      food: {} // 展示商品详情的food
     }
   },
   components: {
     shopFooter,
-    Count
+    Count,
+    goodsDetail
   },
   computed: {
     ...mapState(['goods']),
@@ -80,6 +89,10 @@ export default {
   },
 
   mounted () {
+    // 每次重进商店的时候刷新清空购物车
+    if (this.$route.path === '/shop/goods') {
+      this.$store.dispatch('cleanCart')
+    }
     // 数据更新之后再滑动
     this.$store.dispatch('getShopGoods', () => {
       this.$nextTick(() => {
@@ -90,6 +103,15 @@ export default {
     })
   },
   methods: {
+    // 关闭商品详情
+    closeDetail () {
+      this.showGoodsDetail = false
+    },
+    // 展示商品详情
+    toggleGoodsDetail (item) {
+      this.food = item
+      this.showGoodsDetail = true
+    },
     _initScroll () {
       this.scrollFoods = new BScroll('.right', { // 右边滑动
         click: true,
@@ -169,7 +191,7 @@ export default {
       color #3D3D3E
       align-items center
       justify-content center
-      bottom-border-1px(rgba(0, 0, 0, 0.08))
+      // bottom-border-1px(rgba(0, 0, 0, 0.08))
       .icon
         display inline-block
         width 12px

@@ -147,6 +147,8 @@ export default {
     width 100%
     overflow hidden
     position relative
+    .top_img
+      width 100%
     &:before
       content ''
       position absolute

@@ -2,7 +2,7 @@
   <div class="home">
     <!-- 头部 -->
     <div class="home_header">
-      <van-nav-bar fixed z-index="100">
+      <van-nav-bar fixed z-index="100" @click-left="gotoSearch" @click-right="goLogin">
         <template #right>
           登录|注册
         </template>
@@ -27,6 +27,7 @@
               </van-grid>
             </van-swipe-item>
           </van-swipe>
+          <img class="swiper_img_item" src="./msite_back.svg" alt="" v-show="!foodstypeArr.length">
         </div>
         <!-- 附近商家 -->
         <div class="tab">
@@ -51,7 +52,7 @@
                   </div>
                   <div class="desc_star">
                     <div class="star">
-                      <van-rate :allow-half="true" v-model="shops.rating" :size="18" color="#F5A100" void-icon="star"
+                      <van-rate readonly :allow-half="true" v-model="shops.rating" color="#F5A100" void-icon="star"
                         void-color="#eee" class="star_font" />
                     </div>
                     <div class="star_score"><span>{{shops.rating}}</span></div>
@@ -71,7 +72,13 @@
                   </div>
                 </div>
               </div>
+
             </router-link>
+          </ul>
+          <ul v-if="!shopList.length">
+            <li class=" " v-for="(item, index) in 8" :key="index">
+              <img src="./shop_back.svg" alt="">
+            </li>
           </ul>
         </div>
       </div>
@@ -117,6 +124,14 @@ export default {
     this.scroll = new BScroll(this.$refs.scroll, {
       click: true
     })
+  },
+  methods: {
+    gotoSearch () {
+      this.$router.push('/search')
+    },
+    goLogin () {
+      this.$router.push('/personal')
+    }
   }
 }
 </script>
@@ -137,6 +152,9 @@ export default {
         height 200px
         background-color $color_fff
         margin-bottom 10px
+        .swiper_img_item
+          width 100%
+          height 100%
       .tab
         padding 8px 8px 0 15px
         background-color $color_fff
@@ -156,6 +174,9 @@ export default {
           color #999999
       .shopList
         background-color $color_fff
+        .shopListImg
+          width 100%
+          height 100%
         .shopList_item
           padding 15px 8px
           display flex
@@ -186,6 +207,8 @@ export default {
                 height 16px
                 line-height 16px
                 .star
+                  /deep/ .van-rate__icon
+                    font-size 12px
                   .star_font
                     vertical-align middle
                 .star_score

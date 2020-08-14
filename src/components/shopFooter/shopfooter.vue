@@ -2,69 +2,46 @@
   <div>
     <div class="shopfooter">
       <div class="shopfooter_count">
-        <div class="leftCart">
-          <div class="iconfont icongouwuche" :class="{heightLight:totalCount}"></div>
-          <div class="leftCart_Tag">{{totalCount}}</div>
-        </div>
-        <div class="count">
-          <div class="count_num">￥{{totalPrice}}</div>
-          <div class="count_text">另需配送费￥{{info.deliveryPrice}}元</div>
+        <div class="left">
+          <div class="leftCart" @click="toggleCart">
+            <div class="iconfont icongouwuche" :class="{heightLight:totalCount}"></div>
+            <div class="leftCart_Tag">{{totalCount}}</div>
+          </div>
+          <div class="count">
+            <div class="count_num">￥{{totalPrice}}</div>
+            <div class="count_text">另需配送费￥{{info.deliveryPrice}}元</div>
+          </div>
         </div>
         <div class="rightPrice" :class="countType">
           {{countText}}
         </div>
       </div>
-      <div class="shopfooter_cart" v-show="showshadow">
-        <div class="cleanCart">
-          <div class="cartName">购物车</div>
-          <div class="clean">清空</div>
+      <transition>
+        <div class="shopfooter_cart" v-show="isshow">
+          <div class="cleanCart">
+            <div class="cartName">购物车</div>
+            <div class="clean" @click="cleanCart">清空</div>
+          </div>
+          <div class="shopList">
+            <ul>
+              <li class="shopList_item van-hairline--bottom" v-for="(good, index) in cartGoods" :key="index">
+                <div class="shopName">{{good.name}}</div>
+                <div class="shopPrice">￥{{good.price}}</div>
+                <div class="shopCount">
+                  <count :food="good"></count>
+                </div>
+              </li>
+            </ul>
+          </div>
         </div>
-        <div class="shopList">
-          <ul>
-            <li class="shopList_item van-hairline--bottom">
-              <div class="shopName">八宝酱菜</div>
-              <div class="shopPrice">￥4</div>
-              <div class="shopCount">
-                <count></count>
-              </div>
-            </li>
-            <li class="shopList_item van-hairline--bottom">
-              <div class="shopName">八宝酱菜</div>
-              <div class="shopPrice">￥4</div>
-              <div class="shopCount">
-                <count></count>
-              </div>
-            </li>
-            <li class="shopList_item van-hairline--bottom">
-              <div class="shopName">八宝酱菜</div>
-              <div class="shopPrice">￥4</div>
-              <div class="shopCount">
-                <count></count>
-              </div>
-            </li>
-            <li class="shopList_item van-hairline--bottom">
-              <div class="shopName">八宝酱菜</div>
-              <div class="shopPrice">￥4</div>
-              <div class="shopCount">
-                <count></count>
-              </div>
-            </li>
-            <li class="shopList_item van-hairline--bottom">
-              <div class="shopName">八宝酱菜</div>
-              <div class="shopPrice">￥4</div>
-              <div class="shopCount">
-                <count></count>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div class="shadow" v-if="showshadow"></div>
+      </transition>
+      <div class="shadow" v-show="isshow" @click="toggleCart"></div>
     </div>
   </div>
 
 </template>
 <script>
+import { Dialog } from 'vant'
 import Count from '../../components/shopCount/shopCount'
 import { mapState, mapGetters } from 'vuex'
 export default {
@@ -73,12 +50,51 @@ export default {
   },
   data () {
     return {
-      showshadow: false
+      openCart: false
+    }
+  },
+  methods: {
+    // 清空购物车
+    cleanCart () {
+      Dialog.confirm({
+        title: '提示',
+        message: '确定要清空购物车吗'
+      })
+        .then(() => {
+          this.$store.dispatch('cleanCart')
+        })
+        .catch(() => {
+          // on cancel
+        })
+    },
+    // 购物车显示隐藏
+    toggleCart () {
+      if (this.totalCount > 0) {
+        this.openCart = !this.openCart
+      }
+    },
+    // 每次购物车数量为0时初始化openCart
+    changeOpenCart () {
+      this.openCart = false
     }
   },
   computed: {
     ...mapState(['info', 'cartGoods']),
     ...mapGetters(['totalCount', 'totalPrice']),
+    // 购物车商品显示隐藏
+    isshow () {
+      if (this.totalCount === 0) {
+        this.changeOpenCart()
+        return false
+      }
+      return this.openCart
+    },
+    // shadowShow(){
+    //   if (this.totalCount === 0) {
+    //     return false
+    //   }
+    //   return this.openCart
+    // },
     // 样式
     countType () {
       const { totalPrice } = this
@@ -118,52 +134,56 @@ export default {
     display flex
     background #141d27
     z-index 110
-    .leftCart
-      background-color #141D27
-      padding 6px
-      box-sizing border-box
-      border-radius 50%
-      position absolute
-      top -10px
-      left 12px
-      .icongouwuche
-        width 45px
-        height 45px
-        background-color #2B343C
+    width 100%
+    justify-content space-between
+    .left
+      flex 1
+      .leftCart
+        background-color #141D27
+        padding 6px
+        box-sizing border-box
         border-radius 50%
-        text-align center
-        color #80858A
-        line-height 48px
-        font-size 25px
-        &.heightLight
-          background-color #02A774
+        position absolute
+        top -10px
+        left 12px
+        .icongouwuche
+          width 45px
+          height 45px
+          background-color #2B343C
+          border-radius 50%
+          text-align center
+          color #80858A
+          line-height 48px
+          font-size 25px
+          &.heightLight
+            background-color #02A774
+            color #fff
+        .leftCart_Tag
+          position absolute
+          right 0
+          top 0
+          width 25px
+          height 15px
+          background-color #F01414
+          text-align center
+          border-radius 35%
+          line-height 15px
           color #fff
-      .leftCart_Tag
-        position absolute
-        right 0
-        top 0
-        width 25px
-        height 15px
-        background-color #F01414
-        text-align center
-        border-radius 35%
-        line-height 15px
-        color #fff
-        font-size 10px
-    .count
-      .count_num
-        position absolute
-        left 80px
-        top 8px
-        color #fff
-        font-size 16px
-        font-weight 700
-      .count_text
-        color #80858A
-        position absolute
-        left 72px
-        top 31 px
-        font-size 10px
+          font-size 10px
+      .count
+        .count_num
+          position absolute
+          left 80px
+          top 8px
+          color #fff
+          font-size 16px
+          font-weight 700
+        .count_text
+          color #80858A
+          position absolute
+          left 72px
+          top 31 px
+          font-size 10px
     .rightPrice
       width 105px
       height 48px
@@ -172,9 +192,6 @@ export default {
       color #FFFFFF
       font-size 12px
       font-weight 700
-      position absolute
-      top 0
-      right 0
       background-color #2B333B
       &.no_enough
         background #2b333b
@@ -188,6 +205,10 @@ export default {
     left 0
     right 0
     transform translateY(-100%)
+    &.v-enter, &.v-leave-to
+      transform translateY(0)
+    &.v-enter-active, &.v-leave-active
+      transition all 0.5s
     .cleanCart
       height 40px
       line-height 40px
@@ -230,7 +251,7 @@ export default {
     left 0
     right 0
     bottom 0
-    z-index 40
+    z-index 1
     backdrop-filter blur(10px)
     background rgba(7, 17, 27, 0.6)
 </style>

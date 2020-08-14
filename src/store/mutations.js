@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import {
   RECEIVE_ADDRESS, RECEIVE_FOODSTYPE, RECEIVE_SHOPLIST, RECEIVE_USERINFO, RECEIVE_GETOUT,
-  RECEIVE_GETSHOPGOODS, RECEIVE_GETSHOPINFO, RECEIVE_GETSHOPRATING, INCRESE_COUNT, DECRESE_COUNT
+  RECEIVE_GETSHOPGOODS, RECEIVE_GETSHOPINFO, RECEIVE_GETSHOPRATING, INCRESE_COUNT, DECRESE_COUNT, CLEANCART,
+  RECEIVE_SEARCHLIST
 } from './mutations_types'
 export default {
   [RECEIVE_ADDRESS] (state, { address }) { // 根据经纬度获取位置详情
@@ -43,5 +44,14 @@ export default {
         state.cartGoods.splice(state.cartGoods.indexOf(food), 1)
       }
     }
+  },
+  [CLEANCART] (state) { // 清空购物车
+    state.cartGoods.forEach(item => {
+      item.count = 0
+    })
+    state.cartGoods = []
+  },
+  [RECEIVE_SEARCHLIST] (state, { searchList }) {
+    state.searchList = searchList
   }
 }

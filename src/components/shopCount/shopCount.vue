@@ -1,9 +1,9 @@
 <template>
   <div class="add">
     <transition>
-      <div class="iconfont iconyichu" @click.stop="updataCartCount(false)" v-if="showCount"></div>
+      <div class="iconfont iconyichu" @click.stop="updataCartCount(false)" v-if="food.count"></div>
     </transition>
-    <div class="num" v-if="showCount">{{ food.count}}</div>
+    <div class="num" v-if="food.count">{{ food.count}}</div>
     <div class="iconfont iconjiahao" @click.stop="updataCartCount(true)"></div>
   </div>
 </template>
@@ -12,20 +12,13 @@ export default {
   props: ['food'],
   data () {
     return {
-      showCount: false
     }
   },
   mounted () {
-    // console.log(this.food)
   },
   methods: {
     updataCartCount (isAdd) {
       this.$store.dispatch('updataCartCount', { isAdd, food: this.food })
-      if (this.food.count) {
-        this.showCount = true
-      } else {
-        this.showCount = false
-      }
     }
   }
 

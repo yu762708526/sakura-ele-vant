@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../pages/home/Home.vue'
-import Search from '../pages/search/Search.vue'
-import Order from '../pages/order/Order.vue'
-import Personal from '../pages/personal/Personal.vue'
+// import Home from '../pages/home/Home.vue'
+// import Search from '../pages/search/Search.vue'
+// import Order from '../pages/order/Order.vue'
+// import Personal from '../pages/personal/Personal.vue'
 import Login from '../pages/login/Login.vue'
 import Shop from '../pages/shop/shop.vue'
 import ShopGoods from '../pages/shop/shopGoods/shopGoods.vue'
@@ -22,7 +22,7 @@ const routes = [
     meta: {
       show: true
     },
-    component: Home
+    component: Home = () => import('../pages/home/Home.vue')
   },
   {
     path: '/search',
@@ -30,7 +30,7 @@ const routes = [
     meta: {
       show: true
     },
-    component: Search
+    component: Search = () => import('../pages/search/Search.vue')
 
   },
   {
@@ -39,7 +39,7 @@ const routes = [
     meta: {
       show: true
     },
-    component: Order
+    component: Order = () => import('../pages/order/Order.vue')
   },
   {
     path: '/personal',
@@ -47,7 +47,7 @@ const routes = [
     meta: {
       show: true
     },
-    component: Personal
+    component: Personal = () => import('../pages/personal/Personal.vue')
   },
   {
     path: '/login',
