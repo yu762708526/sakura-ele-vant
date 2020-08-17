@@ -12,9 +12,9 @@ switch (process.env.NODE_ENV) {
   // case 'test':
   //   axios.defaults.baseURL = '/api'
   //   break
-  // case 'production':
-  //   axios.defaults.baseURL = '/api'
-  //   break
+  case 'production':
+    axios.defaults.baseURL = 'http://121.41.229.155/host/'
+    break
   default:
     axios.defaults.baseURL = '/api'
     break

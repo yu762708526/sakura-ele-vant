@@ -68,7 +68,7 @@
                 <van-icon name="close" class="clear_input_item" />
               </a>
               <div class="captcha">
-                <img src="http://localhost:4000/captcha" class="captcha_img" alt="" @click="updataCaptcha"
+                <img src="http://121.41.229.155:4000/captcha" class="captcha_img" alt="" @click="updataCaptcha"
                   ref="Captcha">
               </div>
             </div>
@@ -179,7 +179,7 @@ export default {
     },
     // 点击更新图片验证码
     updataCaptcha () {
-      this.$refs.Captcha.src = 'http://localhost:4000/captcha?time=' + Date.now()
+      this.$refs.Captcha.src = 'http://121.41.229.155:4000/captcha?time=' + Date.now()
     },
     // 关闭弹窗
     closeParent () {
