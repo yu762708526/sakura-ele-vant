@@ -26,7 +26,7 @@ export default {
   [RECEIVE_GETSHOPGOODS] (state, { goods }) { // 商品信息
     state.goods = goods
   },
-  [RECEIVE_GETSHOPRATING] (state, { rating }) { // 商品信息
+  [RECEIVE_GETSHOPRATING] (state, { rating }) { // 商店评价
     state.rating = rating
   },
   [INCRESE_COUNT] (state, { food }) { // 增加商品

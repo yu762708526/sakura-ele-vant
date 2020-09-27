@@ -4,8 +4,8 @@
       <!-- 左侧导航列表 -->
       <div class="left" ref="left">
         <ul class="left_ul">
-          <li class="content_li van-hairline--bottom" v-for="(good, index) in goods" :key="index"
-            :class="{on:currentIndex === index}" @click="toggleLeftItem(index)" ref="content_li">
+          <li class="content_li" v-for="(good, index) in goods" :key="index" :class="{on:currentIndex === index}"
+            @click="toggleLeftItem(index)" ref="content_li">
             <img class="icon" :src="good.icon" alt="" v-if="good.icon">
             {{good.name}}
           </li>
@@ -191,7 +191,7 @@ export default {
       color #3D3D3E
       align-items center
       justify-content center
-      // bottom-border-1px(rgba(0, 0, 0, 0.08))
+      bottom-border-1px(rgba(0, 0, 0, 0.08))
       .icon
         display inline-block
         width 12px

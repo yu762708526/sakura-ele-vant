@@ -4,6 +4,9 @@ ajax请求函数模块
  */
 import axios from 'axios'
 import qs from 'qs'
+// 导入NProgress包对应的JS和CSS
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
 
 // 环境的切换
 
@@ -28,12 +31,14 @@ axios.defaults.withCredentials = true
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
 axios.defaults.transformRequest = params => qs.stringify(params) // 把对象变成字符串  只能用在 'PUT', 'POST' 和 'PATCH' 这几个请求方法
 
-// // 添加请求拦截器
+// 添加请求拦截器
 axios.interceptors.request.use(function (config) {
+  // 展示进度条
+  NProgress.start()
   // 在发送请求之前做些什么
   // 携带token
   // token校验(JWT):接收服务器返回的token，存储到vuex/本地存储中，每一次向服务器发请求，我们应该把token带上
-  const token = localStorage.getItem('token')
+  const token = window.sessionStorage.getItem('token')
   token && (config.headers.Authorization = token)
   return config
 }, function (error) {
@@ -49,8 +54,10 @@ axios.interceptors.request.use(function (config) {
 // //   }
 // // })
 
-// // 添加响应拦截器
+// 添加响应拦截器
 axios.interceptors.response.use(function (response) {
+  // 隐藏进度条
+  NProgress.done()
   // 对响应数据做点什么
   if (response.status === 200) {
     return Promise.resolve(response)

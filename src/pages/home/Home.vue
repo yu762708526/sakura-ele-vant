@@ -101,20 +101,32 @@ export default {
     showSwiper () {
       return this.foodstype.length
     },
+    // foodstypeArr () {
+    //   const { foodstype } = this
+    //   const arr = []
+    //   let minarr = []
+    //   foodstype.forEach(item => {
+    //     if (minarr.length === 0) {
+    //       arr.push(minarr)
+    //     }
+    //     minarr.push(item)
+    //     if (minarr.length === 8) {
+    //       minarr = []
+    //     }
+    //   })
+    //   return arr
+    // },
     foodstypeArr () {
       const { foodstype } = this
-      const arr = []
-      let minarr = []
-      foodstype.forEach(item => {
-        if (minarr.length === 0) {
-          arr.push(minarr)
-        }
-        minarr.push(item)
-        if (minarr.length === 8) {
-          minarr = []
-        }
-      })
-      return arr
+      const len = foodstype.length
+      const n = 8
+      const lineNum = len % 8 === 0 ? len / 8 : Math.floor((len / 8) + 1)
+      const res = []
+      for (let i = 0; i < lineNum; i++) {
+        const temp = foodstype.slice(i * n, i * n + n)
+        res.push(temp)
+      }
+      return res
     }
   },
   mounted () {

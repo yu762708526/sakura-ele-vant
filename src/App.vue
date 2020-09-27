@@ -17,4 +17,5 @@ export default {
   width 100%
   height 100%
   background #f5f5f5
+  font-size 12px
 </style>

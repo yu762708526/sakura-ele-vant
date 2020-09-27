@@ -6,7 +6,7 @@ import {
 import { reqAddress, reqFoodsType, reqShopsList, reqLogout, reqShopGoods, reqShopInfo, reqShopRating, reqSearch } from '../api/index'
 export default {
   async getAddress ({ commit, state }) { // 根据经纬度获取位置详情
-    const geohash = state.latitude + ',' + state.longitude
+    const geohash = `${state.latitude},${state.longitude}`
     const result = await reqAddress(geohash)
     if (result.code === 0) {
       const address = result.data
@@ -22,7 +22,7 @@ export default {
   },
   async getShopsList ({ commit, state }) { // 根据经纬度获取商铺列表
     const { latitude, longitude } = state
-    const result = await reqShopsList(latitude, longitude)
+    const result = await reqShopsList({ latitude, longitude })
     if (result.code === 0) {
       const shopList = result.data
       commit(RECEIVE_SHOPLIST, { shopList })
@@ -72,7 +72,7 @@ export default {
   // 根据经纬度和关键字搜索商铺列表
   async getSearch ({ commit, state }, keyword) {
     const geohash = state.latitude + ',' + state.longitude
-    const result = await reqSearch(geohash, keyword)
+    const result = await reqSearch({ geohash, keyword })
     if (result.code === 0) {
       const searchList = result.data
       commit(RECEIVE_SEARCHLIST, { searchList })

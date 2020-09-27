@@ -267,7 +267,6 @@ export default {
           margin-bottom 10px
           display inline-block
           line-height 17px
-          font-size 12px
         .attitude
           display flex
           align-items center
